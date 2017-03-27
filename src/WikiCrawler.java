@@ -3,6 +3,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -31,7 +32,7 @@ public class WikiCrawler {
 
         try {
 
-            URL url = new URL(BASE_URL + doc);
+            URL url = new URL(BASE_URL + seedUrl);
             InputStream is = url.openStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
@@ -48,9 +49,10 @@ public class WikiCrawler {
                     }
                 }
 
-
-
-                System.out.println(s);
+                Pattern p = Pattern.compile("<a href=\"/wiki/\\w+\"");
+                Matcher m = p.matcher(s);
+                while (m.find())
+                    System.out.println(m.group());
 
                 s = br.readLine();
             }
