@@ -1,11 +1,6 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +26,7 @@ public class WikiCrawler {
     public ArrayList<String> extractLinks(String doc) {
         //TODO
 
-        Hashtable<Integer, String> hashtable = new Hashtable<Integer, String>();
+        Hashtable<Integer, String> hashTable = new Hashtable<Integer, String>();
 
         boolean findP = false;
 
@@ -44,45 +39,74 @@ public class WikiCrawler {
             String s = scanner.nextLine();
 
             if (!findP) {
-                if (Pattern.matches("^<p>.*", s)) {
+                if (Pattern.matches(".*<p>.*", s)) {
                     findP = true;
                 } else {
                     continue;
                 }
             }
 
-            Pattern p = Pattern.compile("<a href=\"/wiki/\\w+\"");
+            Pattern p = Pattern.compile("<a href=\"/wiki/([^:#\\s])+\"");
             Matcher m = p.matcher(s);
+
             while (m.find()) {
                 String output = m.group();
+//                    System.out.println(output);
                 output = output.substring(9, output.length() - 1);
 
-                if (hashtable.contains(output)) {
+                if (hashTable.contains(output)) {
                     continue;
                 } else {
-                    hashtable.put(output.hashCode(), output);
+                    hashTable.put(output.hashCode(), output);
                     ret.add(output);
-                    System.out.println(output);
+//                    System.out.println(output);
                 }
             }
-        }
 
+        }
 
         return ret;
     }
 
     public void crawl() {
 
+        Queue<String> queue = new LinkedList<String>();
+        queue.add(seedUrl);
+
         try {
 
-            URL url = new URL(BASE_URL + seedUrl);
-            InputStream is = url.openStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+            sb.append(max + "\n");
 
-            String doc = ReadBigStringIn(br);
-            extractLinks(doc);
+            int count = 0;
+            HashSet<String> visited = new HashSet<>();
 
-            //TODO
+            while (!queue.isEmpty()) {
+
+                String urlString = queue.remove();
+                URL url = new URL(BASE_URL + urlString);
+                InputStream is = url.openStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                String doc = ReadBigStringIn(br);
+                ArrayList<String> urls = extractLinks(doc);
+
+                for (String newUrl : urls) {
+
+                    if (!visited.contains(newUrl)) {
+                        visited.add(newUrl);
+                        sb.append(urlString + " " + newUrl + '\n');
+                    }
+
+                    if (count < max) {
+                        queue.add(newUrl);
+                        count++;
+                    }
+                }
+            }
+
+            PrintWriter printWriter = new PrintWriter(fileName);
+            printWriter.write(sb.toString());
+            printWriter.close();
 
         } catch (Exception e) {
             e.printStackTrace();
