@@ -78,7 +78,7 @@ public class WikiCrawler {
             StringBuilder sb = new StringBuilder();
             sb.append(max + "\n");
 
-            int count = 0;
+            int count = 1;
             HashSet<String> visited = new HashSet<>();
 
             while (!queue.isEmpty()) {
