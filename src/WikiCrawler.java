@@ -92,12 +92,14 @@ public class WikiCrawler {
 
                 for (String newUrl : urls) {
 
-                    if (!visited.contains(newUrl)) {
+                    if (visited.contains(newUrl)) {
+
+                        sb.append(urlString + " " + newUrl + '\n');
+
+                    } else if (!visited.contains(newUrl) && count < max) {
                         visited.add(newUrl);
                         sb.append(urlString + " " + newUrl + '\n');
-                    }
 
-                    if (count < max) {
                         queue.add(newUrl);
                         count++;
                     }
