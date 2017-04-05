@@ -43,14 +43,16 @@ public class GraphProcessor {
                 }
                 out.add(u);
 
-                ArrayList<String> outR = graph.get(u);
-                if (out == null){
-                    out = new ArrayList<>();
-                    graph.put(u, out);
+                ArrayList<String> outR = graphR.get(u);
+                if (outR == null){
+                    outR = new ArrayList<>();
+                    graphR.put(u, outR);
                 }
-                out.add(v);
+                outR.add(v);
 
             }
+            //DEBUG
+            SCC();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,14 +92,22 @@ public class GraphProcessor {
     private void SCC(){
 
         HashSet<String> mark = new HashSet<>();
-        HashMap<String, Integer> finishTime = new HashMap<>();
+        String[] finishTime = new String[max];
         computeOrder(mark, finishTime);
+//        System.out.print("");
+        mark.clear();
 
+        for (int i = max - 1; i >= 0; i--){
+            String v = finishTime[i];
+            if (!mark.contains(v)){
+                HashSet<String> component = new HashSet<>();
+            }
+        }
 
 
     }
 
-    private void computeOrder(HashSet<String> mark, HashMap<String, Integer> finishTime){
+    private void computeOrder(HashSet<String> mark, String[] finishTime){
 
         mark.clear();
         int counter = 0;
@@ -108,7 +118,7 @@ public class GraphProcessor {
         }
     }
 
-    private int finishDFS(HashSet<String> mark, String v, int counter, HashMap<String, Integer> finishTime){
+    private int finishDFS(HashSet<String> mark, String v, int counter, String[] finishTime){
 
         mark.add(v);
         for (String u : graphR.get(v)){
@@ -117,8 +127,8 @@ public class GraphProcessor {
             }
         }
 
+        finishTime[counter] = v;
         counter++;
-        finishTime.put(v, counter);
         return counter;
     }
 
