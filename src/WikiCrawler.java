@@ -5,7 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by Administrator on 3/20/2017.
+ * Created by Yuxiang Chen on 3/20/2017.
+ *
+ * Yuxiang Chen
+ * Yang Tian
  */
 public class WikiCrawler {
 
