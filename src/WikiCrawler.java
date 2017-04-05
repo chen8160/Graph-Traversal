@@ -80,6 +80,7 @@ public class WikiCrawler {
 
             int count = 1;
             HashSet<String> visited = new HashSet<>();
+            visited.add(seedUrl);
 
             while (!queue.isEmpty()) {
 
