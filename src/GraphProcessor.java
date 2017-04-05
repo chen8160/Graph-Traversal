@@ -1,10 +1,7 @@
 import com.sun.corba.se.spi.ior.IdentifiableFactory;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by Yuxiang Chen on 2017/4/1.
@@ -93,7 +90,39 @@ public class GraphProcessor {
     }
 
     public ArrayList<String> bfsPath(String u, String v) {
-        return null;
+
+        ArrayList<String> ret = new ArrayList<>();
+
+        HashMap<String, String> path = new HashMap<>();
+        HashSet<String> visited = new HashSet<>();
+        Queue<String> queue = new LinkedList<>();
+
+        visited.add(u);
+        queue.add(u);
+
+        while (!queue.isEmpty()) {
+            String start = queue.remove();
+            if (graph.containsKey(start))
+                for (String end : graph.get(start)) {
+                    if (!visited.contains(end)) {
+                        visited.add(end);
+                        queue.add(end);
+                        path.put(end, start);
+                    }
+                }
+        }
+
+        if (path.containsKey(v)) {
+            ret.add(0, v);
+            String t = path.get(v);
+            while (!t.equals(u)) {
+                ret.add(0, t);
+                t = path.get(t);
+            }
+            ret.add(0, t);
+        }
+
+        return ret;
     }
 
 
